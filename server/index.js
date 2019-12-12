@@ -1,13 +1,18 @@
 import React from 'react'
-import {renderToString } from 'react-dom/server'
+import { renderToString } from 'react-dom/server'
 import express from 'express'
+import { StaticRouter } from 'react-router-dom'
+import {Provider} from 'react-redux'
+import store from '../src/store/store'
 import App from '../src/App'
 
 const app = express()
 app.use(express.static('public'))
-app.get('/', (req, res) => {
+app.get('*', (req, res) => {
     // const Page = <App title="你好"></App>
-    const content = renderToString(App)
+const content = renderToString(<Provider store={store}>
+    <StaticRouter location={req.url}>{App}</StaticRouter>
+</Provider>)
     res.send(`
     <html>
         <head>
